@@ -6,5 +6,20 @@
     "background": {
         "service_worker": "worker.js"
     },
-    "permissions": ["storage","contextMenus"]
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "/images/notes-icon_16.png",
+            "32": "/images/notes-icon_32.png",
+            "48": "/images/notes-icon_48.png",
+            "128": "/images/notes-icon_128.png"
+        }
+    },
+    "permissions": ["storage","contextMenus","tabs"],
+    "icons": {
+        "16": "/images/notes-icon_16.png",
+        "32": "/images/notes-icon_32.png",
+        "48": "/images/notes-icon_48.png",
+        "128": "/images/notes-icon_128.png"
+    }
 }
