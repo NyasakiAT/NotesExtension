@@ -8,25 +8,40 @@ chrome.contextMenus.onClicked.addListener(save_note)
 
 
 function save_note(info, tab) {
-    let note_id = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+    let note_id = makeid(20)
 
-    let data = {
-        note_id: {
-            url: info.url,
-            text: info.selectionText
-        }
+    data = {}
+    data[note_id] = {
+        url: info.pageUrl,
+        text: info.selectionText
     }
 
+
     chrome.storage.sync.set(data, function () {
-        console.log("Note" + note_id + "saved");
+        console.log("Note " + note_id + " saved");
     });
 
     dbg()
+    clear()
 }
 
-function dbg(){
-    chrome.storage.sync.get(null, function(items) {
-        var allKeys = Object.keys(items);
-        console.log(allKeys);
+function print_data() {
+    chrome.storage.sync.get(null, function (items) {
+        console.log(items)
     });
+}
+
+function clear_data(){
+    chrome.storage.sync.clear()
+}
+
+function makeid(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * 
+ charactersLength));
+   }
+   return result;
 }
