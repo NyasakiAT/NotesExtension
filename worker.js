@@ -4,13 +4,14 @@ chrome.contextMenus.create({
     contexts: ["selection"]
 });
 
-chrome.contextMenus.onClicked.addListener(save_note)
+chrome.contextMenus.onClicked.addListener(save_note);
 
 
 function save_note(info, tab) {
-    let note_id = makeid(20)
+    let note_id = make_id(20);
 
     data = {}
+
     data[note_id] = {
         url: info.pageUrl,
         text: info.selectionText
@@ -21,8 +22,8 @@ function save_note(info, tab) {
         console.log("Note " + note_id + " saved");
     });
 
-    dbg()
-    clear()
+    print_data();
+    clear_data();
 }
 
 function print_data() {
@@ -31,17 +32,18 @@ function print_data() {
     });
 }
 
-function clear_data(){
-    chrome.storage.sync.clear()
+function clear_data() {
+    chrome.storage.sync.clear();
 }
 
-function makeid(length) {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+function make_id(length) {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * 
- charactersLength));
-   }
-   return result;
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(
+            Math.floor(Math.random() * charactersLength)
+        );
+    }
+    return result;
 }
