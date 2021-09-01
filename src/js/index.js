@@ -8,20 +8,22 @@ chrome.storage.onChanged.addListener((changes, area) => {
 
 async function display_notes() {
   notes_container.innerHTML = '';
-
+  
   let notes = await get_notes();
-  console.log(notes[3]);
+  
+  console.log("Notes length: " + notes.length);
+
   let columns = build_columns(2, notes);
 
   notes_container.appendChild(columns);
-};
+}
 
 async function get_notes() {
   let notes = [];
 
   await chrome.storage.sync.get(null, function (items) {
 
-    for (item in items) {
+    for (var item in items) {
       let note = build_note(item, items[item].text, items[item].url);
 
       console.log("Processed note");
@@ -71,7 +73,7 @@ function build_note(id, text, url) {
     chrome.storage.sync.remove(id);
     display_notes();
   };
-  close_button.className = "delete"
+  close_button.className = "delete";
 
   let content_text = document.createElement("p");
   content_text.textContent = text;
