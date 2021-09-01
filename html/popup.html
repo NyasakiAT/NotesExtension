@@ -3,11 +3,19 @@
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="button.css">
+    <link rel="stylesheet" href="/css/bulma.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body>
-    <button id="showNotes">Show Notes</button>
+    <div class="container">
+        <div class="columns is-multiline">
+            <div class="column is-full">
+                <button class="button is-info" id="show-notes">Show Notes</button>
+                <button class="button is-danger" id="clear-notes">Clear Notes</button>
+            </div>
+        </div>
+    </div>
     <script src="/js/popup.js"></script>
 </body>
 

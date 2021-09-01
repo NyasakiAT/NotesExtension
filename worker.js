@@ -21,19 +21,6 @@ function save_note(info, tab) {
     chrome.storage.sync.set(data, function () {
         console.log("Note " + note_id + " saved");
     });
-
-    print_data();
-    clear_data();
-}
-
-function print_data() {
-    chrome.storage.sync.get(null, function (items) {
-        console.log(items)
-    });
-}
-
-function clear_data() {
-    chrome.storage.sync.clear();
 }
 
 function make_id(length) {
