@@ -1,42 +1,85 @@
-const notes_container = document.getElementById('notes-container')
+let notes_container = document.getElementById("notes-container");
 
-window.onload = display_notes
+window.onload = display_notes;
 
-function display_notes() {
-  notes_container.innerHTML = ''
+async function display_notes() {
+    notes_container.innerHTML = '';
 
-  chrome.storage.sync.get(null, function (items) {
-    for (const item in items) {
-      let note = build_note(item, items[item].text, items[item].url)
-      notes_container.appendChild(note)
+    let notes = await get_notes()
+    console.log(notes[3])
+    let columns = build_columns(2, notes)
 
-      console.log(item)
+    notes_container.appendChild(columns)
+};
+
+async function get_notes(){
+    let notes = []
+    
+    await chrome.storage.sync.get(null, function (items) {
+
+        for (item in items) {
+            let note = build_note(item, items[item].text, items[item].url)
+            
+            console.log("Processed note")
+
+            notes.push(note)
+        }
+    });
+
+    return notes
+}
+
+function build_columns(col_amount, notes){
+    let column_wrapper = document.createElement("div")
+    column_wrapper.className = "columns"
+
+    let notes_amount = notes.length
+    let notes_per_column = (Math.round(notes_amount/col_amount))
+
+    console.log("Notes amount: " + notes_amount + " NPC: " + notes_per_column)
+
+    for (let col_count = 0; col_count < col_amount; col_count++) {
+
+        let column = document.createElement("div")
+        column.className = "column"
+
+        for (let note_count = 0; note_count < notes_per_column; note_count++) {
+            if(note_count >= notes_amount)
+                break;
+
+            console.log(notes[note_count])
+
+            column.appendChild(notes[note_count])
+        }
+
+        column_wrapper.appendChild(column)
     }
-  })
+
+    return column_wrapper
 }
 
 function build_note(id, text, url) {
-  const note_wrapper = document.createElement('div')
-  note_wrapper.className = 'notification is-warning'
+    note_wrapper = document.createElement("div")
+    note_wrapper.className = "notification is-warning"
 
-  const close_button = document.createElement('button')
-  close_button.onclick = () => {
-    chrome.storage.sync.remove(id)
-    display_notes()
-  }
-  close_button.className = 'delete'
+    close_button = document.createElement("button")
+    close_button.onclick = () => {
+        chrome.storage.sync.remove(id);
+        display_notes();
+    }
+    close_button.className = "delete"
 
-  const content_text = document.createElement('p')
-  content_text.textContent = text
+    let content_text = document.createElement("p")
+    content_text.textContent = text
 
-  const content_url = document.createElement('a')
-  content_url.href = url
-  content_url.innerText = 'Link'
-  content_url.target = '_blank'
+    let content_url = document.createElement("a")
+    content_url.href = url
+    content_url.innerText = "Link"
+    content_url.target = "_blank"
 
-  note_wrapper.appendChild(close_button)
-  note_wrapper.appendChild(content_text)
-  note_wrapper.appendChild(content_url)
+    note_wrapper.appendChild(close_button)
+    note_wrapper.appendChild(content_text)
+    note_wrapper.appendChild(content_url)
 
-  return note_wrapper
+    return note_wrapper
 }
