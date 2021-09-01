@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid'
+
 chrome.contextMenus.create({
   title: 'Save as note',
   id: 'SAVE_NOTE',
@@ -7,9 +9,9 @@ chrome.contextMenus.create({
 chrome.contextMenus.onClicked.addListener(save_note)
 
 function save_note(info, tab) {
-  let note_id = make_id(20)
+  const note_id = nanoid()
 
-  data = {}
+  const data = {}
 
   data[note_id] = {
     url: info.pageUrl,
@@ -19,15 +21,4 @@ function save_note(info, tab) {
   chrome.storage.sync.set(data, function () {
     console.log('Note ' + note_id + ' saved')
   })
-}
-
-function make_id(length) {
-  var result = ''
-  var characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  var charactersLength = characters.length
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength))
-  }
-  return result
 }
