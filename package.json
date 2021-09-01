@@ -1,5 +1,5 @@
 {
-  "name": "note-extension",
+  "name": "notes-extension",
   "version": "0.0.0",
   "scripts": {
     "build": "vite build"
