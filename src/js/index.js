@@ -65,10 +65,10 @@ function build_columns(col_amount, notes) {
 }
 
 function build_note(id, text, url) {
-  note_wrapper = document.createElement("div");
+  let note_wrapper = document.createElement("div");
   note_wrapper.className = "notification is-warning";
 
-  close_button = document.createElement("button");
+  let close_button = document.createElement("button");
   close_button.onclick = () => {
     chrome.storage.sync.remove(id);
     display_notes();
