@@ -1,0 +1,11 @@
+{
+  "name": "note-extension",
+  "version": "0.0.0",
+  "scripts": {
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "^2.5.3",
+    "vite-plugin-chrome-extension": "^0.0.7"
+  }
+}

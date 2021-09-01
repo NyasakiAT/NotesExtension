@@ -1,43 +1,42 @@
-let notes_container = document.getElementById("notes-container");
+const notes_container = document.getElementById('notes-container')
 
-window.onload = display_notes;
+window.onload = display_notes
 
 function display_notes() {
-    notes_container.innerHTML = '';
+  notes_container.innerHTML = ''
 
-    chrome.storage.sync.get(null, function (items) {
+  chrome.storage.sync.get(null, function (items) {
+    for (const item in items) {
+      let note = build_note(item, items[item].text, items[item].url)
+      notes_container.appendChild(note)
 
-        for (item in items) {
-            let note = build_note(item, items[item].text, items[item].url)
-            notes_container.appendChild(note)
-
-            console.log(item)
-        }
-    });
-};
+      console.log(item)
+    }
+  })
+}
 
 function build_note(id, text, url) {
-    note_wrapper = document.createElement("div")
-    note_wrapper.className = "notification is-warning"
+  const note_wrapper = document.createElement('div')
+  note_wrapper.className = 'notification is-warning'
 
-    close_button = document.createElement("button")
-    close_button.onclick = () => {
-        chrome.storage.sync.remove(id);
-        display_notes();
-    }
-    close_button.className = "delete"
+  const close_button = document.createElement('button')
+  close_button.onclick = () => {
+    chrome.storage.sync.remove(id)
+    display_notes()
+  }
+  close_button.className = 'delete'
 
-    let content_text = document.createElement("p")
-    content_text.textContent = text
+  const content_text = document.createElement('p')
+  content_text.textContent = text
 
-    let content_url = document.createElement("a")
-    content_url.href = url
-    content_url.innerText = "Link"
-    content_url.target = "_blank"
+  const content_url = document.createElement('a')
+  content_url.href = url
+  content_url.innerText = 'Link'
+  content_url.target = '_blank'
 
-    note_wrapper.appendChild(close_button)
-    note_wrapper.appendChild(content_text)
-    note_wrapper.appendChild(content_url)
+  note_wrapper.appendChild(close_button)
+  note_wrapper.appendChild(content_text)
+  note_wrapper.appendChild(content_url)
 
-    return note_wrapper
+  return note_wrapper
 }
