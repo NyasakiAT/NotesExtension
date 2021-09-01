@@ -1,32 +1,31 @@
 let notes_container = document.getElementById("notes-container");
 
-window.onload = () => {
-    console.log('Notes loaded')
+window.onload = display_notes;
+
+function display_notes() {
+    notes_container.innerHTML = '';
 
     chrome.storage.sync.get(null, function (items) {
 
         for (item in items) {
-            let note = build_card(items[item].text, items[item].url)
+            let note = build_note(item, items[item].text, items[item].url)
             notes_container.appendChild(note)
 
             console.log(item)
         }
-        
-        
-
-        
     });
 };
 
-function build_card(text, url){
-    let card_wrapper = document.createElement("div")
-    card_wrapper.className = "card"
+function build_note(id, text, url) {
+    note_wrapper = document.createElement("div")
+    note_wrapper.className = "notification is-warning"
 
-    let card_content = document.createElement("div")
-    card_content.className = "card-content"
-
-    let content = document.createElement("div")
-    content.className = "content"
+    close_button = document.createElement("button")
+    close_button.onclick = () => {
+        chrome.storage.sync.remove(id);
+        display_notes();
+    }
+    close_button.className = "delete"
 
     let content_text = document.createElement("p")
     content_text.textContent = text
@@ -36,10 +35,9 @@ function build_card(text, url){
     content_url.innerText = "Link"
     content_url.target = "_blank"
 
-    card_wrapper.appendChild(card_content)
-    card_content.appendChild(content)
-    content.appendChild(content_text)
-    content.appendChild(content_url)
+    note_wrapper.appendChild(close_button)
+    note_wrapper.appendChild(content_text)
+    note_wrapper.appendChild(content_url)
 
-    return card_wrapper
+    return note_wrapper
 }
