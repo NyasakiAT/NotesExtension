@@ -1,7 +1,6 @@
 let notes_container = document.getElementById("notes-container");
 
 window.onload = display_notes;
-
 chrome.storage.onChanged.addListener((changes, area) => {
   display_notes();
 });
@@ -21,18 +20,19 @@ async function display_notes() {
 async function get_notes() {
   let notes = [];
 
-  await chrome.storage.sync.get(null, function (items) {
+  return new Promise((res) => {
+    chrome.storage.sync.get(null, function (items) {
+      for (var item in items) {
+        let note = build_note(item, items[item].text, items[item].url);
 
-    for (var item in items) {
-      let note = build_note(item, items[item].text, items[item].url);
+        console.log("Processed note (" + item + ")");
 
-      console.log("Processed note (" + item + ")");
+        notes.push(note);
+      }
 
-      notes.push(note);
-    }
+      res(notes)
+    });
   });
-
-  return notes;
 }
 
 function build_columns(col_amount, notes) {
