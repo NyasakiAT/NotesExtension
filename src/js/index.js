@@ -26,7 +26,7 @@ async function get_notes() {
     for (var item in items) {
       let note = build_note(item, items[item].text, items[item].url);
 
-      console.log("Processed note");
+      console.log("Processed note (" + item + ")");
 
       notes.push(note);
     }
