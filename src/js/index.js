@@ -25,12 +25,10 @@ async function get_notes() {
       for (var item in items) {
         let note = build_note(item, items[item].text, items[item].url);
 
-        console.log("Processed note (" + item + ")");
-
         notes.push(note);
       }
 
-      res(notes)
+      res(notes);
     });
   });
 }
@@ -44,22 +42,29 @@ function build_columns(col_amount, notes) {
 
   console.log("Notes amount: " + notes_amount + " NPC: " + notes_per_column);
 
+  let added_notes = 0;
+
   for (let col_count = 0; col_count < col_amount; col_count++) {
 
-    let column = document.createElement("div");
+    var column = document.createElement("div");
     column.className = "column";
 
     for (let note_count = 0; note_count < notes_per_column; note_count++) {
-      if (note_count >= notes_amount)
+      console.log("note:" + note_count + " col:" + col_count + " added:" + added_notes);
+
+      if (added_notes >= notes_amount){
         break;
+      }
 
-      console.log(notes[note_count]);
-
-      column.appendChild(notes[note_count]);
+      column.appendChild(notes[added_notes]);
+      added_notes++;
     }
 
     column_wrapper.appendChild(column);
+    column = null;
   }
+
+  console.log(column_wrapper);
 
   return column_wrapper;
 }
