@@ -4,14 +4,14 @@ chrome.contextMenus.create({
   title: 'Save as note',
   id: 'SAVE_NOTE',
   contexts: ['selection'],
-})
+});
 
-chrome.contextMenus.onClicked.addListener(save_note)
+chrome.contextMenus.onClicked.addListener(save_note);
 
 function save_note(info, tab) {
-  const note_id = nanoid()
+  const note_id = nanoid();
 
-  const data = {}
+  const data = {};
 
   data[note_id] = {
     url: info.pageUrl,
@@ -19,8 +19,8 @@ function save_note(info, tab) {
   }
 
   chrome.storage.sync.set(data, function () {
-    console.log('Note ' + note_id + ' saved')
-  })
+    console.log('Note ' + note_id + ' saved');
+  });
 
   chrome.notifications.create({
     type: "basic",
