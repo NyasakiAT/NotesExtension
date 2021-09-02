@@ -1,4 +1,6 @@
-import { nanoid } from 'nanoid'
+import {
+  nanoid
+} from 'nanoid'
 
 chrome.contextMenus.create({
   title: 'Save as note',
@@ -8,18 +10,37 @@ chrome.contextMenus.create({
 
 chrome.contextMenus.onClicked.addListener(save_note);
 
-function save_note(info, tab) {
+function get_selection() {
+  var selection = window.getSelection();
+  return selection.toString();
+}
+
+async function save_note(info, tab) {
   const note_id = nanoid();
 
   const data = {};
+  let selected_text = "";
+  try {
+    var content = await chrome.scripting.executeScript({
+      target: {
+        tabId: tab.id
+      },
+      func: get_selection,
+    });
+    selected_text = content[0].result;
+  } catch (e) {
+    console.log("Using fallback method to get selected text!\n" + e.message);
+    selected_text = info.selectionText;
+  }
+
 
   data[note_id] = {
     url: info.pageUrl,
-    text: info.selectionText,
-  }
+    text: selected_text
+  };
 
   chrome.storage.sync.set(data, function () {
-    console.log('Note ' + note_id + ' saved');
+    console.log("Saved note");
   });
 
   chrome.notifications.create({

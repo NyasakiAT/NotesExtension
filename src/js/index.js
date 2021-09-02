@@ -82,6 +82,7 @@ function build_note(id, text, url) {
 
   let content_text = document.createElement("p");
   content_text.textContent = text;
+  content_text.style = "white-space: pre-wrap;";
 
   let content_url = document.createElement("a");
   content_url.href = url;

@@ -17,7 +17,19 @@
     }
   },
   "options_page": "./html/index.html",
-  "permissions": ["storage", "contextMenus", "tabs", "notifications"],
+  "permissions": [
+    "storage", 
+    "contextMenus", 
+    "tabs", 
+    "notifications", 
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://*/",
+    "https://*/",
+    "file://*/"
+  ]
+  ,
   "icons": {
     "16": "./images/notes-icon_16.png",
     "32": "./images/notes-icon_32.png",
