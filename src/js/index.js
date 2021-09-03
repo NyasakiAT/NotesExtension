@@ -6,8 +6,8 @@ chrome.storage.onChanged.addListener((changes, area) => {
 });
 
 async function display_notes() {
-  notes_container.innerHTML = '';
-  
+  notes_container.innerHTML = "";
+
   let notes = await get_notes();
   
   console.log("Notes length: " + notes.length);
@@ -76,7 +76,6 @@ function build_note(id, text, url) {
   let close_button = document.createElement("button");
   close_button.onclick = () => {
     chrome.storage.sync.remove(id);
-    display_notes();
   };
   close_button.className = "delete";
 
