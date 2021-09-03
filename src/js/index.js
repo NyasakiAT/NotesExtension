@@ -70,27 +70,66 @@ function build_columns(col_amount, notes) {
 }
 
 function build_note(id, text, url) {
-  let note_wrapper = document.createElement("div");
-  note_wrapper.className = "notification is-warning";
 
-  let close_button = document.createElement("button");
-  close_button.onclick = () => {
+  /*
+  --<div class="card">
+  <div class="card-content">
+    <div class="content">
+      Lorem ipsum leo risus, porta ac consectetur ac, vestibulum at eros. Donec id elit non mi porta gravida at eget metus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum.
+    </div>
+  </div>
+  <footer class="card-footer">
+    <button href="#" class="card-footer-item">Save</button>
+    <button class="card-footer-item">Edit</button>
+    <button class="card-footer-item">Delete</button>
+  </footer>
+</div>
+  */
+
+  let note_wrapper = document.createElement("div");
+  note_wrapper.className = "card has-background-warning";
+
+  let note_content_wrapper = document.createElement("div");
+  note_content_wrapper.className = "card-content";
+
+  let note_content = document.createElement("div");
+  note_content.className = "content";
+  note_content.innerHTML = text;
+
+  let note_footer = document.createElement("footer");
+  note_footer.className = "card-footer";
+
+  let delete_button = document.createElement("button");
+  delete_button.onclick = () => {
     chrome.storage.sync.remove(id);
   };
-  close_button.className = "delete";
+  delete_button.className = "card-footer-item button is-danger";
+  delete_button.innerText = "Delete";
 
-  let content_text = document.createElement("p");
-  content_text.textContent = text;
-  content_text.style = "white-space: pre-wrap;";
+  let share_button = document.createElement("button");
+  share_button.onclick = () => {
+    console.log("Please implement me");
+  };
+  share_button.className = "card-footer-item button is-info";
+  share_button.innerText = "Share";
 
-  let content_url = document.createElement("a");
-  content_url.href = url;
-  content_url.innerText = "Link";
-  content_url.target = "_blank";
+  let page_button = document.createElement("a");
+  page_button.onclick = () => {
+    console.log("Please implement me");
+  };
+  page_button.className = "card-footer-item button is-info";
+  page_button.innerText = "Page";
+  page_button.href = url;
+  page_button.target = "_blank";
 
-  note_wrapper.appendChild(close_button);
-  note_wrapper.appendChild(content_text);
-  note_wrapper.appendChild(content_url);
+  note_wrapper.appendChild(note_content_wrapper);
+  note_wrapper.appendChild(note_footer);
+
+  note_content_wrapper.appendChild(note_content);
+
+  note_footer.appendChild(share_button);
+  note_footer.appendChild(page_button);
+  note_footer.appendChild(delete_button);
 
   return note_wrapper;
 }
