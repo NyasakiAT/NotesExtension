@@ -1,5 +1,5 @@
 # NotesExtension
-A handy chrome extension to quickly save portions of webpages and other stuff!
+## A handy chrome extension to quickly save portions of webpages and other stuff!
 If you like this project you can give me a tip on [Ko-Fi](https://ko-fi.com/nyasaki)
 
 ## How to use
