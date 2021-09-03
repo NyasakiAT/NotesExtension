@@ -1,3 +1,26 @@
-.button {
-  align-self: center;
+.center-text {
+  text-align: center;
+}
+
+h1{
+  text-align: center;
+  margin-top: .75rem;
+  margin-bottom: .75rem;
+}
+
+.columns{
+  margin-left: 0rem;
+  margin-right: 0rem;
+  margin-top: 0rem;
+}
+
+.card{
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+@media screen and (max-width:768px) {
+  .column {
+    padding: 0rem
+  }
 }

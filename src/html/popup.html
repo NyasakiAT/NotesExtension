@@ -1,20 +1,32 @@
 <!DOCTYPE html>
 
 <html lang="en">
-  <head>
-    <link rel="stylesheet" href="../css/bulma.min.css" />
-    <link rel="stylesheet" href="../css/styles.css" />
-  </head>
 
-  <body>
-    <div class="container">
-      <div class="columns is-multiline">
-        <div class="column is-full">
-          <button class="button is-info" id="show-notes">Show Notes</button>
-          <button class="button is-danger" id="clear-notes">Clear Notes</button>
-        </div>
+<head>
+  <link rel="stylesheet" href="../css/bulma.min.css" />
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<!--<button class="button is-info" id="show-notes">Show Notes</button>
+<button class="button is-danger" id="clear-notes">Clear Notes</button>-->
+
+<body>
+  <div class="card">
+    <header class="card-header">
+      <p class="card-header-title center-text">
+        Notes
+      </p>
+    </header>
+    <div class="card-content">
+      <div class="content">
+        Select text and right click to show the "Save as note" option
       </div>
     </div>
-    <script src="../js/popup.js"></script>
-  </body>
+    <footer class="card-footer">
+      <button class="button card-footer-item is-info" id="show-notes">Show Notes</button>
+      <button class="button card-footer-item is-danger" id="clear-notes">Clear Notes</button>
+    </footer>
+  </div>
+  <script src="../js/popup.js"></script>
+</body>
+
 </html>
