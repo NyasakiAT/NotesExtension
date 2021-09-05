@@ -13,5 +13,8 @@
 ## Bundle
 Run `npm build` and load the `dist`-dir
 
-# Packages used
+# Thanks to
 [nanoid](https://www.npmjs.com/package/nanoid#comparison-with-uuid)
+[bulma](https://bulma.io/)
+[nodejs](https://nodejs.org/en/)
+[papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme)
