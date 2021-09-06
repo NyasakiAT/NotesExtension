@@ -20,7 +20,6 @@
   "permissions": [
     "storage", 
     "contextMenus", 
-    "tabs", 
     "notifications", 
     "scripting"
   ],
