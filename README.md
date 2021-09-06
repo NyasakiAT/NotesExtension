@@ -1,5 +1,6 @@
 # NotesExtension
-A handy chrome extension to quickly save portions of webpages and other stuff!
+## A handy chrome extension to quickly save portions of webpages and other stuff!
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S0248JF)
 
 ## How to use
 - Install the extension
@@ -12,5 +13,8 @@ A handy chrome extension to quickly save portions of webpages and other stuff!
 ## Bundle
 Run `npm build` and load the `dist`-dir
 
-# Packages used
+# Thanks to
 [nanoid](https://www.npmjs.com/package/nanoid#comparison-with-uuid)
+[bulma](https://bulma.io/)
+[nodejs](https://nodejs.org/en/)
+[papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme)
