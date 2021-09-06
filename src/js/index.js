@@ -9,8 +9,6 @@ async function display_notes() {
   notes_container.innerHTML = "";
 
   let notes = await get_notes();
-  
-  console.log("Notes length: " + notes.length);
 
   let columns = build_columns(2, notes);
 
@@ -40,8 +38,6 @@ function build_columns(col_amount, notes) {
   let notes_amount = notes.length;
   let notes_per_column = (Math.round(notes_amount / col_amount));
 
-  console.log("Notes amount: " + notes_amount + " NPC: " + notes_per_column);
-
   let added_notes = 0;
 
   for (let col_count = 0; col_count < col_amount; col_count++) {
@@ -50,7 +46,6 @@ function build_columns(col_amount, notes) {
     column.className = "column";
 
     for (let note_count = 0; note_count < notes_per_column; note_count++) {
-      console.log("note:" + note_count + " col:" + col_count + " added:" + added_notes);
 
       if (added_notes >= notes_amount){
         break;
@@ -64,27 +59,10 @@ function build_columns(col_amount, notes) {
     column = null;
   }
 
-  console.log(column_wrapper);
-
   return column_wrapper;
 }
 
 function build_note(id, text, url) {
-
-  /*
-  --<div class="card">
-  <div class="card-content">
-    <div class="content">
-      Lorem ipsum leo risus, porta ac consectetur ac, vestibulum at eros. Donec id elit non mi porta gravida at eget metus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum.
-    </div>
-  </div>
-  <footer class="card-footer">
-    <button href="#" class="card-footer-item">Save</button>
-    <button class="card-footer-item">Edit</button>
-    <button class="card-footer-item">Delete</button>
-  </footer>
-</div>
-  */
 
   let note_wrapper = document.createElement("div");
   note_wrapper.className = "card has-background-warning";
@@ -94,7 +72,7 @@ function build_note(id, text, url) {
 
   let note_content = document.createElement("div");
   note_content.className = "content";
-  note_content.innerHTML = text;
+  note_content.innerHTML = text.replace("\n", "<br>");
 
   let note_footer = document.createElement("footer");
   note_footer.className = "card-footer";

@@ -33,7 +33,6 @@ async function save_note(info, tab) {
     selected_text = info.selectionText;
   }
 
-
   data[note_id] = {
     url: info.pageUrl,
     text: selected_text
