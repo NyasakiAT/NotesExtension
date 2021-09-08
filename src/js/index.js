@@ -47,7 +47,7 @@ function build_columns(col_amount, notes) {
 
     for (let note_count = 0; note_count < notes_per_column; note_count++) {
 
-      if (added_notes >= notes_amount){
+      if (added_notes >= notes_amount) {
         break;
       }
 
@@ -85,16 +85,31 @@ function build_note(id, text, url) {
   delete_button.innerText = "Delete";
 
   let share_button = document.createElement("button");
-  share_button.onclick = () => {
-    console.log("Please implement me");
+  share_button.onclick = async () => {
+
+    const share_link = await share(id, text);
+    const note = await get_single_note(id);
+    const data = {}
+
+    note.share_link = share_link;
+
+    data[id] = note;
+
+    chrome.storage.sync.set(data, function () {
+      console.log("Added share link to note");
+    });
+
+    chrome.tabs.create({
+      url: share_link
+    });
+
+
+    console.log(share_link);
   };
   share_button.className = "card-footer-item button is-info";
   share_button.innerText = "Share";
 
   let page_button = document.createElement("a");
-  page_button.onclick = () => {
-    console.log("Please implement me");
-  };
   page_button.className = "card-footer-item button is-info";
   page_button.innerText = "Page";
   page_button.href = url;
@@ -110,4 +125,42 @@ function build_note(id, text, url) {
   note_footer.appendChild(delete_button);
 
   return note_wrapper;
+}
+
+async function get_single_note(id) {
+  return new Promise((res) => {
+    chrome.storage.sync.get(id, function (item) {
+      res(item[id]);
+    });
+  });
+}
+
+async function share(id, data) {
+
+  const note = await get_single_note(id);
+
+  return new Promise((resolve) => {
+
+    if (note.share_link) {
+      resolve(note.share_link);
+    } else {
+
+      fetch("https://paste.rs", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        body: data
+
+      }).then(res => {
+
+        resolve(res.text());
+
+      }).catch(ex => {
+
+        console.error("A error occured: " + ex);
+
+      });
+    }
+  });
 }

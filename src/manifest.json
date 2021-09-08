@@ -18,6 +18,7 @@
   },
   "options_page": "./html/index.html",
   "permissions": [
+    "tabs",
     "storage", 
     "contextMenus", 
     "notifications", 

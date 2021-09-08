@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "jshint": "^2.13.1",
+    "jslint": "^0.12.1",
+    "jslinter": "^1.5.47",
     "nanoid": "^3.1.25"
   }
 }
