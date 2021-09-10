@@ -27,8 +27,8 @@ you can open a issue.
 Run `npm build` and load the `dist`-dir
 
 # Thanks to
-[paste.rs](https://paste.rs) Hosting of shared notes
-[nanoid](https://www.npmjs.com/package/nanoid#comparison-with-uuid) Generating the ID's
-[bulma](https://bulma.io/) Frontent CSS
-[nodejs](https://nodejs.org/en/) Building the extension
-[papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme) The extension icon
+- [paste.rs](https://paste.rs) Hosting of shared notes
+- [nanoid](https://www.npmjs.com/package/nanoid#comparison-with-uuid) Generating the ID's
+- [bulma](https://bulma.io/) Frontent CSS
+- [nodejs](https://nodejs.org/en/) Building the extension
+- [papirus](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme) The extension icon
