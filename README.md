@@ -2,6 +2,8 @@
 ## A handy chrome extension to quickly save portions of webpages and other stuff!
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S0248JF)
 
+[Download](https://chrome.google.com/webstore/detail/notes/fhfaockaejiiiclfmellamflidakliim?hl=en-GB&authuser=0)
+
 ## Intro
 Browsing a lot of websites and want to save text from it for later use?
 With this extension you can!
