@@ -72,7 +72,7 @@ function build_note(id, text, url) {
 
   let note_content = document.createElement("div");
   note_content.className = "content";
-  note_content.innerHTML = text.replace("\n", "<br>");
+  note_content.innerHTML = text.replaceAll("\n", "<br>");
 
   let note_footer = document.createElement("footer");
   note_footer.className = "card-footer";
