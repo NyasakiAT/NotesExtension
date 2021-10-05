@@ -87,7 +87,14 @@ function build_note(id, text, url) {
   let share_button = document.createElement("button");
   share_button.onclick = async () => {
 
+    share_button.setAttribute('disabled', true);
+    share_button.innerText = "Sharing...";
+
     const share_link = await share(id, text);
+
+    share_button.removeAttribute('disabled');
+    share_button.innerText = "Share";
+
     const note = await get_single_note(id);
     const data = {}
 
