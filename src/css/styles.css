@@ -19,6 +19,10 @@ h1{
   margin-bottom: 12px;
 }
 
+.comments, .comments-editable {
+  margin-top: 12px;
+}
+
 .popup{
   margin-top: 0px;
   margin-bottom: 0px;
