@@ -83,7 +83,7 @@ function build_note(id, text, url, comments) {
 
   let note_comments_content = document.createElement('p');
   if (comments) {
-    note_comments_content.innerText = comments.replaceAll("\n", "<br>");
+    note_comments_content.innerHTML = comments.replaceAll("\n", "<br>");
     note_comments.appendChild(note_comments_content);
   }
   note_content.onclick = () => {
@@ -126,7 +126,7 @@ function build_note(id, text, url, comments) {
 
       note_comments.removeChild(note_comments_editable);
       if (note_comments_editable.value && note_comments_editable.value !== '') {
-        note_comments_content.innerText = note_comments_editable.value.replaceAll("\n", "<br>");
+        note_comments_content.innerHTML = note_comments_editable.value.replaceAll("\n", "<br>");
         note_comments.appendChild(note_comments_content);
       }
 
