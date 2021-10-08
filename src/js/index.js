@@ -76,22 +76,26 @@ function build_note(id, text, url, comments) {
 
   let note_comments = document.createElement("div");
   note_comments.className = "comments has-text-grey is-italic";
+  note_comments.innerHTML = '<div class="has-text-weight-medium">Comments</div>';
+
   let note_comments_editable = document.createElement("textarea");
   note_comments_editable.className = "textarea comments-editable";
+
+  let note_comments_content = document.createElement('p');
   if (comments) {
-    note_comments.innerHTML = `<div class="has-text-weight-medium">Comments</div>${comments.replaceAll("\n", "<br>")}`;
-    note_content.appendChild(note_comments);
+    note_comments_content.innerText = comments.replaceAll("\n", "<br>");
+    note_comments.appendChild(note_comments_content);
   }
   note_content.onclick = () => {
 
-    if (Array.from(note_content.childNodes).includes(note_comments_editable)) return;
-    if (Array.from(note_content.childNodes).includes(note_comments)) note_content.removeChild(note_comments);
+    if (Array.from(note_comments.childNodes).includes(note_comments_editable)) return;
+    if (Array.from(note_comments.childNodes).includes(note_comments_content)) note_comments.removeChild(note_comments_content);
 
     share_button.classList.add('is-success');
     share_button.innerText = "Save";
 
     note_comments_editable.value = comments ?? '';
-    note_content.appendChild(note_comments_editable);
+    note_comments.appendChild(note_comments_editable);
   }
 
   let note_footer = document.createElement("footer");
@@ -112,7 +116,6 @@ function build_note(id, text, url, comments) {
       const note = await get_single_note(id);
       const data = {}
 
-      console.log(note_comments_editable.value);
       note.comments = note_comments_editable.value;
 
       data[id] = note;
@@ -121,10 +124,10 @@ function build_note(id, text, url, comments) {
         console.log("Added comments to note");
       });
 
-      note_content.removeChild(note_comments_editable);
+      note_comments.removeChild(note_comments_editable);
       if (note_comments_editable.value && note_comments_editable.value !== '') {
-        note_comments.innerHTML = `<div class="has-text-weight-medium">Comments</div>${note_comments_editable.value.replaceAll("\n", "<br>")}`;
-        note_content.appendChild(note_comments);
+        note_comments_content.innerText = note_comments_editable.value.replaceAll("\n", "<br>");
+        note_comments.appendChild(note_comments_content);
       }
 
       share_button.classList.remove('is-success');
@@ -170,6 +173,7 @@ function build_note(id, text, url, comments) {
   note_wrapper.appendChild(note_footer);
 
   note_content_wrapper.appendChild(note_content);
+  note_content.appendChild(note_comments);
 
   note_footer.appendChild(share_button);
   note_footer.appendChild(page_button);
