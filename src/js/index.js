@@ -21,7 +21,7 @@ async function get_notes() {
   return new Promise((res) => {
     chrome.storage.sync.get(null, function (items) {
       for (var item in items) {
-        let note = build_note(item, items[item].text, items[item].url);
+        let note = build_note(item, items[item].text, items[item].url, items[item].comments);
 
         notes.push(note);
       }
@@ -62,7 +62,7 @@ function build_columns(col_amount, notes) {
   return column_wrapper;
 }
 
-function build_note(id, text, url) {
+function build_note(id, text, url, comments) {
 
   let note_wrapper = document.createElement("div");
   note_wrapper.className = "card has-background-warning";
@@ -73,6 +73,30 @@ function build_note(id, text, url) {
   let note_content = document.createElement("div");
   note_content.className = "content";
   note_content.innerHTML = text.replaceAll("\n", "<br>");
+
+  let note_comments = document.createElement("div");
+  note_comments.className = "comments has-text-grey is-italic";
+  note_comments.innerHTML = '<div class="has-text-weight-medium">Comments</div>';
+
+  let note_comments_editable = document.createElement("textarea");
+  note_comments_editable.className = "textarea comments-editable";
+
+  let note_comments_content = document.createElement('p');
+  if (comments) {
+    note_comments_content.innerHTML = comments.replaceAll("\n", "<br>");
+    note_comments.appendChild(note_comments_content);
+  }
+  note_content.onclick = () => {
+
+    if (Array.from(note_comments.childNodes).includes(note_comments_editable)) return;
+    if (Array.from(note_comments.childNodes).includes(note_comments_content)) note_comments.removeChild(note_comments_content);
+
+    share_button.classList.add('is-success');
+    share_button.innerText = "Save";
+
+    note_comments_editable.value = comments ?? '';
+    note_comments.appendChild(note_comments_editable);
+  }
 
   let note_footer = document.createElement("footer");
   note_footer.className = "card-footer";
@@ -87,31 +111,54 @@ function build_note(id, text, url) {
   let share_button = document.createElement("button");
   share_button.onclick = async () => {
 
-    share_button.setAttribute('disabled', true);
-    share_button.innerText = "Sharing...";
+    if (share_button.classList.contains('is-success')) {
 
-    const share_link = await share(id, text);
+      const note = await get_single_note(id);
+      const data = {}
 
-    share_button.removeAttribute('disabled');
-    share_button.innerText = "Share";
+      note.comments = note_comments_editable.value;
 
-    const note = await get_single_note(id);
-    const data = {}
+      data[id] = note;
 
-    note.share_link = share_link;
+      chrome.storage.sync.set(data, function () {
+        console.log("Added comments to note");
+      });
 
-    data[id] = note;
+      note_comments.removeChild(note_comments_editable);
+      if (note_comments_editable.value && note_comments_editable.value !== '') {
+        note_comments_content.innerHTML = note_comments_editable.value.replaceAll("\n", "<br>");
+        note_comments.appendChild(note_comments_content);
+      }
 
-    chrome.storage.sync.set(data, function () {
-      console.log("Added share link to note");
-    });
+      share_button.classList.remove('is-success');
+      share_button.innerText = "Share";
+    } else {
 
-    chrome.tabs.create({
-      url: share_link
-    });
+      share_button.setAttribute('disabled', true);
+      share_button.innerText = "Sharing...";
 
+      const share_link = await share(id, text);
 
-    console.log(share_link);
+      share_button.removeAttribute('disabled');
+      share_button.innerText = "Share";
+
+      const note = await get_single_note(id);
+      const data = {}
+
+      note.share_link = share_link;
+
+      data[id] = note;
+
+      chrome.storage.sync.set(data, function () {
+        console.log("Added share link to note");
+      });
+
+      chrome.tabs.create({
+        url: share_link
+      });
+
+      console.log(share_link);
+    }
   };
   share_button.className = "card-footer-item button is-info";
   share_button.innerText = "Share";
@@ -126,6 +173,7 @@ function build_note(id, text, url) {
   note_wrapper.appendChild(note_footer);
 
   note_content_wrapper.appendChild(note_content);
+  note_content.appendChild(note_comments);
 
   note_footer.appendChild(share_button);
   note_footer.appendChild(page_button);
