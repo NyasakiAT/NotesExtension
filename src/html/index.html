@@ -1,27 +1,31 @@
 <!DOCTYPE html>
 
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Notes</title>
-    <meta
-      name="description"
-      content="Save maked text easily as note for later use"
-    />
-    <meta name="author" content="Marcel Walk" />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="icon" href="../images/favicon.ico" />
-    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+  <title>Notes</title>
+  <meta name="description" content="Save maked text easily as note for later use" />
+  <meta name="author" content="Marcel Walk" />
 
-    <link rel="stylesheet" href="../css/bulma.min.css" />
-    <link rel="stylesheet" href="../css/styles.css" />
-  </head>
+  <link rel="icon" href="../images/favicon.ico" />
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
 
-  <body>
-    <h1>Notes</h1>
-    <div id="notes-container"></div>
-    <script src="../js/index.js"></script>
-  </body>
+  <link rel="stylesheet" href="../css/bulma.min.css" />
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+
+<body>
+  <h1>Notes</h1>
+  <div class="tag-search-container">
+    <input type="text" class="input" id="tag-search-input" placeholder="Search by tag">
+    <button id="tag-search-clear" class="delete is-medium ml"></button>
+  </div>
+  <div class="tags m" id="tags-container"></div>
+  <div id="notes-container"></div>
+  <script src="../js/index.js"></script>
+</body>
+
 </html>
