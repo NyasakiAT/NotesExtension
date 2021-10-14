@@ -8,6 +8,12 @@ h1{
   margin-bottom: .75rem;
 }
 
+.tag-search-container {
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+}
+
 .columns{
   margin-left: 0rem;
   margin-right: 0rem;
@@ -19,14 +25,31 @@ h1{
   margin-bottom: 12px;
 }
 
-.comments, .comments-editable {
-  margin-top: 12px;
-}
-
 .popup{
   margin-top: 0px;
   margin-bottom: 0px;
 }
+
+.tag {
+  user-select: none;
+  cursor: pointer;
+}
+
+/* comms */
+
+.m {
+  margin: 12px;
+}
+
+.mt {
+  margin-top: 12px;
+}
+
+.ml {
+  margin-left: 12px;
+}
+
+/* responsiveness */
 
 @media screen and (max-width:768px) {
   .column {
