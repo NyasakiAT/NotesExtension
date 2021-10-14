@@ -268,6 +268,7 @@ function build_tag(tag) {
 
 function clear_tag_search() {
   tag_input.value = "";
+  tag = "";
   display_notes();
 }
 
