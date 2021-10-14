@@ -1,32 +1,63 @@
 let notes_container = document.getElementById("notes-container");
+let tags_container = document.getElementById("tags-container");
+let tag_input = document.getElementById('tag-search-input');
+let tag_search_clear = document.getElementById('tag-search-clear');
+let tag;
 
-window.onload = display_notes;
-chrome.storage.onChanged.addListener((changes, area) => {
+window.onload = () => {
   display_notes();
+
+  tag_input.oninput = (event) => {
+    tag = event.target.value;
+    display_notes(tag, true);
+  }
+
+  tag_search_clear.onclick = clear_tag_search;
+}
+chrome.storage.onChanged.addListener((changes, area) => {
+  display_notes(tag);
 });
 
-async function display_notes() {
+async function display_notes(tag, doNotUpdateTagsList) {
   notes_container.innerHTML = "";
 
-  let notes = await get_notes();
+  let { notes, tags } = await get_notes_and_tags(tag);
 
   let columns = build_columns(2, notes);
 
   notes_container.appendChild(columns);
+
+  if (!doNotUpdateTagsList) {
+    tags_container.innerHTML = "";
+    tags.forEach((tag) => {
+      tags_container.appendChild(tag);
+    });
+  }
 }
 
-async function get_notes() {
+async function get_notes_and_tags(tag) {
   let notes = [];
+  let tags = [];
+  let tags_text = [];
 
   return new Promise((res) => {
     chrome.storage.sync.get(null, function (items) {
       for (var item in items) {
-        let note = build_note(item, items[item].text, items[item].url, items[item].comments);
-
-        notes.push(note);
+        if (!tag || items[item].tags && items[item].tags.find((item_tag) => item_tag.toLowerCase() === tag.toLowerCase())) {
+          let note = build_note(item, items[item].text, items[item].url, items[item].comments, items[item].tags);
+          notes.push(note);
+        }
+        if (items[item].tags) {
+          items[item].tags.forEach((tag) => {
+            if (!tags_text.includes(tag)) {
+              tags.push(build_tag(tag));
+              tags_text.push(tag);
+            }
+          });
+        }
       }
 
-      res(notes);
+      res({ notes, tags });
     });
   });
 }
@@ -62,7 +93,7 @@ function build_columns(col_amount, notes) {
   return column_wrapper;
 }
 
-function build_note(id, text, url, comments) {
+function build_note(id, text, url, comments, tags) {
 
   let note_wrapper = document.createElement("div");
   note_wrapper.className = "card has-background-warning";
@@ -75,11 +106,11 @@ function build_note(id, text, url, comments) {
   note_content.innerHTML = text.replaceAll("\n", "<br>");
 
   let note_comments = document.createElement("div");
-  note_comments.className = "comments has-text-grey is-italic";
+  note_comments.className = "mt has-text-grey is-italic";
   note_comments.innerHTML = '<div class="has-text-weight-medium">Comments</div>';
 
   let note_comments_editable = document.createElement("textarea");
-  note_comments_editable.className = "textarea comments-editable";
+  note_comments_editable.className = "textarea mt";
 
   let note_comments_content = document.createElement('p');
   if (comments) {
@@ -97,6 +128,12 @@ function build_note(id, text, url, comments) {
     note_comments_editable.value = comments ?? '';
     note_comments.appendChild(note_comments_editable);
   }
+
+  let tags_container = document.createElement('div');
+  tags_container.className = "tags mt";
+  tags && tags.forEach((tag) => {
+    tags_container.appendChild(build_tag(tag));
+  });
 
   let note_footer = document.createElement("footer");
   note_footer.className = "card-footer";
@@ -116,7 +153,11 @@ function build_note(id, text, url, comments) {
       const note = await get_single_note(id);
       const data = {}
 
-      note.comments = note_comments_editable.value;
+      let this_comment = note_comments_editable.value;
+      note.comments = this_comment;
+
+      let tags = get_tags(this_comment);
+      note.tags = tags;
 
       data[id] = note;
 
@@ -126,9 +167,14 @@ function build_note(id, text, url, comments) {
 
       note_comments.removeChild(note_comments_editable);
       if (note_comments_editable.value && note_comments_editable.value !== '') {
-        note_comments_content.innerHTML = note_comments_editable.value.replaceAll("\n", "<br>");
+        note_comments_content.innerHTML = this_comment.replaceAll("\n", "<br>");
         note_comments.appendChild(note_comments_content);
       }
+
+      tags_container.innerHTML = "";
+      tags.forEach((tag) => {
+        tags_container.appendChild(build_tag(tag));
+      });
 
       share_button.classList.remove('is-success');
       share_button.innerText = "Share";
@@ -174,6 +220,7 @@ function build_note(id, text, url, comments) {
 
   note_content_wrapper.appendChild(note_content);
   note_content.appendChild(note_comments);
+  note_content.appendChild(tags_container);
 
   note_footer.appendChild(share_button);
   note_footer.appendChild(page_button);
@@ -188,6 +235,40 @@ async function get_single_note(id) {
       res(item[id]);
     });
   });
+}
+
+function get_tags(text) {
+  let hash_i = 0;
+  let searching = false;
+  let tags = [];
+  for (let i = 0; i < text.length; i++) {
+    if (!searching && text.charAt(i) === '#') {
+      hash_i = i;
+      searching = true;
+    } else if (searching && (i === text.length - 1 || text.charAt(i) === ' ' || text.charAt(i) === '\n' || text.charAt(i) === '#')) {
+      let tag = text.substring(hash_i, i === text.length - 1 ? i + 1 : i);
+      if (tag.length !== 0) tags.push(tag);
+      searching = false;
+    }
+  }
+  return tags;
+}
+
+function build_tag(tag) {
+  let tag_element = document.createElement('div');
+  tag_element.className = "tag is-light is-warning";
+  tag_element.innerText = tag;
+  tag_element.onclick = (event) => {
+    event.stopPropagation();
+    tag_input.value = event.target.innerText;
+    display_notes(event.target.innerText);
+  }
+  return tag_element;
+}
+
+function clear_tag_search() {
+  tag_input.value = "";
+  display_notes();
 }
 
 async function share(id, data) {
