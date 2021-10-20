@@ -65,7 +65,7 @@ async function get_notes_and_tags(tags) {
   return new Promise((res) => {
     chrome.storage.sync.get(null, async function (items) {
       for (var item in items) {
-        if (!tags || items[item].tags && do_tags_match(tags, items[item].tags)) {
+        if (!tags || tags.length === 0 || items[item].tags && do_tags_match(tags, items[item].tags)) {
           let note = build_note(item, items[item].text, items[item].url, items[item].comments, items[item].tags);
           notes.push(note);
         }
