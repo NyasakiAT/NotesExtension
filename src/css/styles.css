@@ -30,6 +30,10 @@ h1{
   margin-bottom: 0px;
 }
 
+.tags-input {
+  width: 100%;
+}
+
 .tag {
   user-select: none;
   cursor: pointer;
