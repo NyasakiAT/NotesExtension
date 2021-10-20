@@ -1,27 +1,49 @@
+import '../js/bulma-tagsinput.min';
+
 let notes_container = document.getElementById("notes-container");
 let tags_container = document.getElementById("tags-container");
-let tag_input = document.getElementById('tag-search-input');
+let tag_input = new BulmaTagsInput(
+  document.getElementById('tag-search-input'),
+  {
+    delimiter: ' ',
+    selectable: false
+  }
+);
 let tag_search_clear = document.getElementById('tag-search-clear');
-let tag;
+let tags = [];
 
 window.onload = () => {
   display_notes();
 
-  tag_input.oninput = (event) => {
-    tag = event.target.value;
-    display_notes(tag, true);
+  tag_input.on('after.add', function (item) {
+    tags.push(item.item);
+    display_notes(tags, true);
+  });
+
+  tag_input.on('after.remove', function (item) {
+    tags.splice(tags.indexOf(item), 1);
+    display_notes(tags, true);
+  });
+
+  tag_input.input.onkeydown = (event) => {
+    if (event.key === 'Backspace')
+      tag_input.items.length !== 0 && tag_input.remove(tag_input.items[tag_input.items.length - 1]);
   }
 
-  tag_search_clear.onclick = clear_tag_search;
+  tag_search_clear.onclick = () => {
+    tag_input.flush();
+    tags = [];
+    display_notes();
+  };
 }
 chrome.storage.onChanged.addListener((changes, area) => {
-  display_notes(tag);
+  display_notes(tags);
 });
 
-async function display_notes(tag, doNotUpdateTagsList) {
+async function display_notes(tags, doNotUpdateTagsList) {
   notes_container.innerHTML = "";
 
-  let { notes, tags } = await get_notes_and_tags(tag);
+  let { notes, _tags } = await get_notes_and_tags(tags);
 
   let columns = build_columns(2, notes);
 
@@ -29,37 +51,48 @@ async function display_notes(tag, doNotUpdateTagsList) {
 
   if (!doNotUpdateTagsList) {
     tags_container.innerHTML = "";
-    tags.forEach((tag) => {
+    _tags.forEach((tag) => {
       tags_container.appendChild(tag);
     });
   }
 }
 
-async function get_notes_and_tags(tag) {
+async function get_notes_and_tags(tags) {
   let notes = [];
-  let tags = [];
+  let _tags = [];
   let tags_text = [];
 
   return new Promise((res) => {
-    chrome.storage.sync.get(null, function (items) {
+    chrome.storage.sync.get(null, async function (items) {
       for (var item in items) {
-        if (!tag || items[item].tags && items[item].tags.find((item_tag) => item_tag.toLowerCase() === tag.toLowerCase())) {
+        if (!tags || items[item].tags && do_tags_match(tags, items[item].tags)) {
           let note = build_note(item, items[item].text, items[item].url, items[item].comments, items[item].tags);
           notes.push(note);
         }
         if (items[item].tags) {
           items[item].tags.forEach((tag) => {
             if (!tags_text.includes(tag)) {
-              tags.push(build_tag(tag));
+              _tags.push(build_tag(tag));
               tags_text.push(tag);
             }
           });
         }
       }
 
-      res({ notes, tags });
+      res({ notes, _tags });
     });
   });
+}
+
+function do_tags_match(search_tags, curr_note_tags) {
+  let qualifies = true;
+  search_tags.forEach((search_tag) => {
+    if (!curr_note_tags.includes(search_tag)) {
+      qualifies = false;
+      return;
+    }
+  });
+  return qualifies;
 }
 
 function build_columns(col_amount, notes) {
@@ -247,7 +280,7 @@ function get_tags(text) {
       searching = true;
     } else if (searching && (i === text.length - 1 || text.charAt(i) === ' ' || text.charAt(i) === '\n' || text.charAt(i) === '#')) {
       let tag = text.substring(hash_i, i === text.length - 1 ? i + 1 : i);
-      if (tag.length !== 0) tags.push(tag);
+      if (tag.length !== 0) tags.push(tag.toLowerCase());
       searching = false;
     }
   }
@@ -260,16 +293,9 @@ function build_tag(tag) {
   tag_element.innerText = tag;
   tag_element.onclick = (event) => {
     event.stopPropagation();
-    tag_input.value = event.target.innerText;
-    display_notes(event.target.innerText);
+    tag_input.add(event.target.innerText);
   }
   return tag_element;
-}
-
-function clear_tag_search() {
-  tag_input.value = "";
-  tag = "";
-  display_notes();
 }
 
 async function share(id, data) {
