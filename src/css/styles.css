@@ -39,6 +39,17 @@ h1{
   cursor: pointer;
 }
 
+#dark-mode-toggle-container {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+/* bulma overrides */
+.has-text-grey-lighter::placeholder {
+  color: #7a7a7a !important
+}
+
 /* comms */
 
 .m {

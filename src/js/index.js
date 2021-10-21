@@ -1,5 +1,10 @@
 import '../js/bulma-tagsinput.min';
 
+let isModeDark = isCacheModeDark();  // 0 -> light, 1 -> dark
+
+let html = document.getElementsByTagName('html')[0];
+let app_header = document.getElementById('app-header');
+let dark_mode_toggle = document.getElementById('dark-mode-toggle');
 let notes_container = document.getElementById("notes-container");
 let tags_container = document.getElementById("tags-container");
 let tag_input = new BulmaTagsInput(
@@ -9,10 +14,25 @@ let tag_input = new BulmaTagsInput(
     selectable: false
   }
 );
+let tags_search_section = document.getElementsByClassName('tags-input')[0];
 let tag_search_clear = document.getElementById('tag-search-clear');
 let tags = [];
 
 window.onload = () => {
+
+  if (isModeDark) {
+    dark_mode_toggle.setAttribute('checked', '');
+    app_header.classList.add('has-text-grey-lighter');
+    html.classList.add('has-background-black-ter');
+    tag_input.input.classList.add('has-background-grey-darker', 'has-text-grey-lighter', 'is-dark');
+    tags_search_section.classList.add('has-background-grey-darker');
+  } else dark_mode_toggle.removeAttribute('checked');
+
+  dark_mode_toggle.onchange = () => {
+    setCacheMode(!isModeDark);
+    window.location.reload();
+  }
+
   display_notes();
 
   tag_input.on('after.add', function (item) {
@@ -39,6 +59,14 @@ window.onload = () => {
 chrome.storage.onChanged.addListener((changes, area) => {
   display_notes(tags);
 });
+
+function isCacheModeDark() {
+  return localStorage.getItem('is_mode_dark') === '1';
+}
+
+function setCacheMode(isDark) {
+  return localStorage.setItem('is_mode_dark', isDark ? '1' : '0');
+}
 
 async function display_notes(tags, doNotUpdateTagsList) {
   notes_container.innerHTML = "";
@@ -129,17 +157,17 @@ function build_columns(col_amount, notes) {
 function build_note(id, text, url, comments, tags) {
 
   let note_wrapper = document.createElement("div");
-  note_wrapper.className = "card has-background-warning";
+  note_wrapper.className = `card ${isModeDark ? 'has-background-grey-dark' : 'has-background-warning'}`;
 
   let note_content_wrapper = document.createElement("div");
   note_content_wrapper.className = "card-content";
 
   let note_content = document.createElement("div");
-  note_content.className = "content";
+  note_content.className = `content ${isModeDark && 'has-text-white-bis'}`;
   note_content.innerHTML = text.replaceAll("\n", "<br>");
 
   let note_comments = document.createElement("div");
-  note_comments.className = "mt has-text-grey is-italic";
+  note_comments.className = `mt is-italic ${isModeDark ? 'has-text-grey-light' : 'has-text-grey'}`;
   note_comments.innerHTML = '<div class="has-text-weight-medium">Comments</div>';
 
   let note_comments_editable = document.createElement("textarea");
@@ -289,7 +317,7 @@ function get_tags(text) {
 
 function build_tag(tag) {
   let tag_element = document.createElement('div');
-  tag_element.className = "tag is-light is-warning";
+  tag_element.className = `tag ${isModeDark ? 'is-dark' : 'is-light is-warning'}`;
   tag_element.innerText = tag;
   tag_element.onclick = (event) => {
     event.stopPropagation();
