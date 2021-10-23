@@ -16,10 +16,17 @@
   <link rel="stylesheet" href="../css/bulma.min.css" />
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/bulma-tagsinput.min.css" />
+  <link rel="stylesheet" href="../css/bulma-switch.min.css" />
 </head>
 
 <body>
-  <h1>Notes</h1>
+  <div id="app-header" class="is-flex is-justify-content-center is-align-items-center">
+    <h1>Notes</h1>
+    <div id="dark-mode-toggle-container">
+      <input id="dark-mode-toggle" type="checkbox" name="dark-mode-toggle" class="switch is-small">
+      <label for="dark-mode-toggle">Dark Mode</label>
+    </div>
+  </div>
   <div class="tag-search-container">
     <input class="input" type="tags" placeholder="Choose Tags" id="tag-search-input">
     <button id="tag-search-clear" class="delete is-medium ml"></button>
